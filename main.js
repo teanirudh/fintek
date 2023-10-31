@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 
 const isDev = require("electron-is-dev");
 
@@ -12,4 +12,8 @@ app.on("ready", () => {
   win.loadURL(
     isDev ? "http://localhost:3000" : `${app.getAppPath()}\\build\\index.html`
   );
+});
+
+ipcMain.on("note", (_, value) => {
+  console.log(value);
 });
