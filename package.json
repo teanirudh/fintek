@@ -2,23 +2,23 @@
   "name": "tryx",
   "version": "0.1.0",
   "private": true,
-  "main": "main.js",
+  "main": "engine/main.js",
   "homepage": "./",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "electron-is-dev": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
+    "sqlite3": "^5.1.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron": "electron ."
+    "start-react": "react-scripts start",
+    "start-electron": "nodemon --watch ./engine/* --exec \"electron .\"",
+    "dev": "concurrently \"yarn start-react\" \"wait-on http://localhost:3000 && yarn start-electron\"",
+    "postinstall": "electron-builder install-app-deps",
+    "pack-app": "react-scripts build && electron-builder --dir",
+    "build": "react-scripts build && electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -39,7 +39,20 @@
     ]
   },
   "devDependencies": {
-    "electron": "^27.0.2",
-    "electron-is-dev": "^2.0.0"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "concurrently": "^8.2.2",
+    "electron": "^27.0.3",
+    "electron-builder": "^24.6.4",
+    "nodemon": "^3.0.1",
+    "wait-on": "^7.1.0"
+  },
+  "build": {
+    "extends": null,
+    "appId": "com.teanirudh.tryx",
+    "productName": "tryx",
+    "copyright": "@teanirudh",
+    "files": [
+      "build/**/*"
+    ]
   }
 }
