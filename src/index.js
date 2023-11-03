@@ -1,25 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 
-const ipcRenderer = window.require("electron").ipcRenderer;
-
 const App = () => {
-  const [note, setNote] = useState("");
-
   return (
     <div>
-      <input
-        type="text"
-        value={note}
-        onChange={(event) => setNote(event.target.value)}
-      />
-      <button
-        onClick={() => {
-          ipcRenderer.send("note", note);
-        }}
-      >
-        Send
-      </button>
+      <h1>Hello World!</h1>
     </div>
   );
 };
