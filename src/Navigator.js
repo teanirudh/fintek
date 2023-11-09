@@ -17,9 +17,9 @@ const Navigator = () => {
   }
 
   return (
-    <div>
+    <div className="grid">
       <Menu
-        className="flex justify-center font-bold"
+        className="grid-cols-none justify-center font-bold"
         mode="horizontal"
         onClick={(e) => setPage(e.key)}
       >
