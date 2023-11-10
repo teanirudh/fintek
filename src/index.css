@@ -1,3 +1,17 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.ant-table-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 5px;
+}
+
+.ant-table-body::-webkit-scrollbar-track {
+  background-color: lightgrey;
+  border-radius: 5px;
+}
