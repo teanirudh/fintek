@@ -1,7 +1,82 @@
 import { DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
-import { Col, Popconfirm, Row, Table } from "antd";
+import {
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
+  Row,
+  Select,
+  Table,
+} from "antd";
+import { useLayoutEffect, useState } from "react";
 
-const columns = [
+const InputModal = (props) => {
+  const { isEdit, onOk, onCancel } = props;
+  return (
+    <Modal
+      open={true}
+      title={isEdit ? "Edit Transaction" : "Add Transaction"}
+      okType="default"
+      okText="Save"
+      okButtonProps={{ className: "p-1 text-xs" }}
+      cancelText="Discard"
+      cancelButtonProps={{ className: "p-1 text-xs" }}
+      onOk={onOk}
+      onCancel={onCancel}
+      maskClosable={false}
+      closeIcon={null}
+      destroyOnClose={true}
+      centered
+    >
+      <Divider />
+      <Form layout="vertical">
+        <Form.Item label="Date" name="Date" required={true}>
+          <DatePicker />
+        </Form.Item>
+        <Form.Item label="Description" name="Description" required={true}>
+          <Input />
+        </Form.Item>
+        <Form.Item label="Amount" name="Amount" required={true}>
+          <Input />
+        </Form.Item>
+        <Form.Item label="Debit" name="Debit" required={true}>
+          <Select />
+        </Form.Item>
+        <Form.Item label="Credit" name="Credit" required={true}>
+          <Select />
+        </Form.Item>
+      </Form>
+      <Divider />
+    </Modal>
+  );
+};
+
+const EditButton = (props) => {
+  const { onClick } = props;
+  return <EditTwoTone onClick={onClick} />;
+};
+
+const DeleteButton = () => {
+  return (
+    <Popconfirm
+      okType="default"
+      okText="Yes"
+      okButtonProps={{ className: "p-1 text-xs" }}
+      cancelText="No"
+      cancelButtonProps={{ className: "p-1 text-xs" }}
+      title="Delete this transaction?"
+      placement="left"
+      onConfirm={() => {}}
+    >
+      <DeleteTwoTone />
+    </Popconfirm>
+  );
+};
+
+const mainColumns = [
   {
     title: "ID",
     dataIndex: "id",
@@ -44,47 +119,6 @@ const columns = [
     width: "20%",
     align: "center",
   },
-  {
-    title: "",
-    dataIndex: "actions",
-    key: "actions",
-    width: "7%",
-    align: "center",
-    render: () => {
-      return (
-        <Row>
-          <Col span={12}>
-            <Popconfirm
-              okType="default"
-              okText="Yes"
-              okButtonProps={{ className: "p-1 text-xs" }}
-              cancelText="No"
-              cancelButtonProps={{ className: "p-1 text-xs" }}
-              title="Edit this transaction?"
-              placement="left"
-              onConfirm={() => {}}
-            >
-              <EditTwoTone />
-            </Popconfirm>
-          </Col>
-          <Col span={12}>
-            <Popconfirm
-              okType="default"
-              okText="Yes"
-              okButtonProps={{ className: "p-1 text-xs" }}
-              cancelText="No"
-              cancelButtonProps={{ className: "p-1 text-xs" }}
-              title="Delete this transaction?"
-              placement="left"
-              onConfirm={() => {}}
-            >
-              <DeleteTwoTone />
-            </Popconfirm>
-          </Col>
-        </Row>
-      );
-    },
-  },
 ];
 
 const data = [];
@@ -107,13 +141,68 @@ for (let i = 1; i <= 100; i++) {
 }
 
 const Ledger = () => {
+  const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  useLayoutEffect(() => {
+    setLoading(false);
+  }, []);
+
+  const columns = [
+    ...mainColumns,
+    {
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      width: "7%",
+      align: "center",
+      render: () => {
+        return (
+          <Row>
+            <Col span={12}>
+              <EditButton onClick={() => setShowEditModal(true)} />
+            </Col>
+            <Col span={12}>
+              <DeleteButton />
+            </Col>
+          </Row>
+        );
+      },
+    },
+  ];
+
   return (
     <div className="grid-cols-none m-5">
+      {showAddModal && (
+        <InputModal
+          isEdit={false}
+          onOk={() => {
+            setShowAddModal(false);
+          }}
+          onCancel={() => {
+            setShowAddModal(false);
+          }}
+        />
+      )}
+      {showEditModal && (
+        <InputModal
+          isEdit={true}
+          onOk={() => {
+            setShowEditModal(false);
+          }}
+          onCancel={() => {
+            setShowEditModal(false);
+          }}
+        />
+      )}
       <Table
         className="justify-items-center"
         columns={columns}
         dataSource={data}
+        loading={loading}
         pagination={false}
+        size="small"
         scroll={{
           x: false,
           y: 500,
