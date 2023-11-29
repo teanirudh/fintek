@@ -16,9 +16,13 @@
 .env.test.local
 .env.production.local
 
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # user files
 /userdata
+
+# config files
+.vscode
