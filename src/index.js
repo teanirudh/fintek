@@ -1,10 +1,10 @@
-import "./index.css";
+import "./styles/index.css";
 
 import { ConfigProvider, theme } from "antd";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Navigator from "./Navigator";
+import Navigator from "./components/Navigator";
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
       theme={{
         algorithm: theme.defaultAlgorithm,
         token: {
-          fontFamily: "Plus Jakarta Sans, sans-serif",
+          fontFamily: "Gilroy, sans-serif",
           fontSize: "1rem",
         },
       }}

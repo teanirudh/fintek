@@ -2,6 +2,11 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@font-face {
+  font-family: "Gilroy";
+  src: local("Gilroy-Regular"), url(./Gilroy.ttf) format("truetype");
+}
+
 .ant-table-body::-webkit-scrollbar {
   width: 8px;
 }
