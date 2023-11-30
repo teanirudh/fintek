@@ -123,7 +123,7 @@ const mainColumns = [
 
 const data = [];
 
-for (let i = 1; i <= 100; i++) {
+for (let i = 1; i <= 25; i++) {
   data.push({
     key: i,
     id: i,
@@ -140,7 +140,7 @@ for (let i = 1; i <= 100; i++) {
   });
 }
 
-const Ledger = () => {
+const Transactions = () => {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -173,7 +173,7 @@ const Ledger = () => {
   ];
 
   return (
-    <div className="grid-cols-none m-5">
+    <div>
       {showAddModal && (
         <InputModal
           isEdit={false}
@@ -203,14 +203,10 @@ const Ledger = () => {
         loading={loading}
         pagination={false}
         size="small"
-        scroll={{
-          x: false,
-          y: 500,
-        }}
         bordered
       />
     </div>
   );
 };
 
-export default Ledger;
+export default Transactions;

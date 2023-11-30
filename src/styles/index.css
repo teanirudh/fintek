@@ -6,17 +6,3 @@
   font-family: "Gilroy";
   src: local("Gilroy-Regular"), url(./Gilroy.ttf) format("truetype");
 }
-
-.ant-table-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-.ant-table-body::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  border-radius: 5px;
-}
-
-.ant-table-body::-webkit-scrollbar-track {
-  background-color: lightgrey;
-  border-radius: 5px;
-}
