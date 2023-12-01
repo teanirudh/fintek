@@ -13,7 +13,21 @@ const App = () => {
         algorithm: theme.defaultAlgorithm,
         token: {
           fontFamily: "Gilroy, sans-serif",
-          fontSize: "1rem",
+        },
+        components: {
+          Layout: {
+            bodyBg: "#f5f6fa",
+            headerBg: "#f5f6fa",
+            siderBg: "#f5f6fa",
+            footerBg: "#f5f6fa",
+          },
+          Menu: {
+            itemBg: "#f5f6fa",
+            activeBarBorderWidth: 0,
+          },
+          Table: {
+            stickyScrollBarBorderRadius: 50,
+          },
         },
       }}
     >

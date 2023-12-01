@@ -1,17 +1,55 @@
 import { DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
 import {
+  Button,
   Col,
   DatePicker,
   Divider,
+  Flex,
   Form,
   Input,
+  Layout,
   Modal,
   Popconfirm,
   Row,
   Select,
   Table,
+  Typography,
 } from "antd";
 import { useLayoutEffect, useState } from "react";
+
+const { Content, Header } = Layout;
+const { Title } = Typography;
+const { RangePicker } = DatePicker;
+
+const TransHeader = () => {
+  return (
+    <div className="w-full px-[2vh]">
+      <Row className="h-1/2" align="middle">
+        <Col span={24}>
+          <Title className="!m-0 !p-0" level={3}>
+            Transactions
+          </Title>
+        </Col>
+      </Row>
+      <Row className="h-1/2" align="middle">
+        <Col span={12}>
+          <Flex justify="start" gap="middle">
+            <Button>All</Button>
+            <Button>Income</Button>
+            <Button>Expenses</Button>
+            <Button>Filters</Button>
+          </Flex>
+        </Col>
+        <Col span={12}>
+          <Flex justify="end" gap="middle">
+            <RangePicker />
+            <Button>Add Transaction</Button>
+          </Flex>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 const InputModal = (props) => {
   const { isEdit, onOk, onCancel } = props;
@@ -173,39 +211,44 @@ const Transactions = () => {
   ];
 
   return (
-    <div>
-      {showAddModal && (
-        <InputModal
-          isEdit={false}
-          onOk={() => {
-            setShowAddModal(false);
-          }}
-          onCancel={() => {
-            setShowAddModal(false);
-          }}
+    <Layout>
+      <Header className="!sticky top-0 z-10 flex min-h-min h-[16vh] p-0">
+        <TransHeader />
+      </Header>
+      <Content className="!z-0">
+        <Table
+          className="h-[84vh] px-[2vh] pt-[2vh]"
+          columns={columns}
+          dataSource={data}
+          loading={loading}
+          pagination={false}
+          sticky={true}
+          scroll={{ y: "calc(72vh)" }}
         />
-      )}
-      {showEditModal && (
-        <InputModal
-          isEdit={true}
-          onOk={() => {
-            setShowEditModal(false);
-          }}
-          onCancel={() => {
-            setShowEditModal(false);
-          }}
-        />
-      )}
-      <Table
-        className="justify-items-center"
-        columns={columns}
-        dataSource={data}
-        loading={loading}
-        pagination={false}
-        size="small"
-        bordered
-      />
-    </div>
+        {showAddModal && (
+          <InputModal
+            isEdit={false}
+            onOk={() => {
+              setShowAddModal(false);
+            }}
+            onCancel={() => {
+              setShowAddModal(false);
+            }}
+          />
+        )}
+        {showEditModal && (
+          <InputModal
+            isEdit={true}
+            onOk={() => {
+              setShowEditModal(false);
+            }}
+            onCancel={() => {
+              setShowEditModal(false);
+            }}
+          />
+        )}
+      </Content>
+    </Layout>
   );
 };
 

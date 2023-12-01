@@ -12,7 +12,7 @@ import Dashboard from "./Dashboard";
 import Settings from "./Settings";
 import Transactions from "./Transactions";
 
-const { Content, Sider } = Layout;
+const { Sider } = Layout;
 
 const siderItems = [
   {
@@ -39,7 +39,7 @@ const siderItems = [
 
 const Navigator = () => {
   let selectedPage = null;
-  const [page, setPage] = useState("ledger");
+  const [page, setPage] = useState("transactions");
 
   switch (page) {
     case "dashboard":
@@ -60,21 +60,14 @@ const Navigator = () => {
 
   return (
     <Layout hasSider={true}>
-      <Sider
-        className="overflow-auto h-screen top-0 left-0 !sticky"
-        theme="light"
-      >
+      <Sider className="overflow-auto h-screen top-0 left-0 !sticky">
         <Menu
           mode="inline"
           items={siderItems}
           onClick={(e) => setPage(e.key)}
         />
       </Sider>
-      <Layout>
-        <Content style={{ overflow: "initial" }}>
-          <div>{selectedPage}</div>
-        </Content>
-      </Layout>
+      {selectedPage}
     </Layout>
   );
 };
