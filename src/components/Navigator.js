@@ -4,7 +4,7 @@ import {
   MoneyCollectOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Typography } from "antd";
 
 import { useState } from "react";
 import Accounts from "./Accounts";
@@ -13,7 +13,8 @@ import Settings from "./Settings";
 import Transactions from "./Transactions";
 
 const { Sider } = Layout;
-const Logo = require("../assets/Logo.png");
+const { Title } = Typography;
+const Logo = require("../assets/budget.png");
 
 const siderItems = [
   {
@@ -62,8 +63,11 @@ const Navigator = () => {
   return (
     <Layout hasSider={true}>
       <Sider className="overflow-auto h-screen top-0 left-0 !sticky">
-        <div className="h-[16vh] flex justify-center items-center">
+        <div className="h-[16vh] flex flex-col justify-center items-center">
           <img src={Logo} alt="Logo" className="w-[8vh] h-[8vh]" />
+          <Title level={5} className="!m-0 !p-0">
+            FinTek
+          </Title>
         </div>
         <Menu
           className="py-[2vh]"
