@@ -12,38 +12,71 @@ import {
   Popconfirm,
   Row,
   Select,
+  Slider,
+  Switch,
   Table,
+  Tooltip,
   Typography,
 } from "antd";
 import { useLayoutEffect, useState } from "react";
 
 const { Content, Header } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
+const { Search } = Input;
+
+const AmountSlider = () => {
+  return (
+    <div className="grow px-3 bg-white border border-solid border-[#d9d9d9] rounded-md">
+      <Flex className="h-[30px] justify-center items-center" gap="middle">
+        <Tooltip title="Show large transactions" placement="top">
+          <Switch size="small" />
+        </Tooltip>
+        <Divider type="vertical" className="h-5 m-0 p-0" />
+        <Slider
+          className="grow"
+          range={{ draggableTrack: true }}
+          defaultValue={[0, 10000]}
+          tooltip={{
+            formatter: (value) => (
+              <Text className="text-xs text-white">{value}</Text>
+            ),
+          }}
+          min={0}
+          max={100000}
+          step={1000}
+        />
+        <Text className="text-[#000000] opacity-30">Amount</Text>
+      </Flex>
+    </div>
+  );
+};
 
 const TransHeader = () => {
   return (
     <div className="w-full px-[2vh]">
       <Row className="h-1/2" align="middle">
-        <Col span={24}>
+        <Col span={6}>
           <Title className="!m-0 !p-0" level={3}>
             Transactions
           </Title>
         </Col>
-      </Row>
-      <Row className="h-1/2" align="middle">
-        <Col span={12}>
-          <Flex justify="start" gap="middle">
-            <Button>All</Button>
-            <Button>Income</Button>
-            <Button>Expenses</Button>
-            <Button>Filters</Button>
+        <Col span={18}>
+          <Flex justify="end" gap="middle">
+            <Button>Add Transaction</Button>
+            <Button>Import</Button>
+            <Button>Export</Button>
           </Flex>
         </Col>
-        <Col span={12}>
-          <Flex justify="end" gap="middle">
-            <RangePicker />
-            <Button>Add Transaction</Button>
+      </Row>
+      <Row className="h-1/2" align="middle">
+        <Col span={24}>
+          <Flex gap="middle">
+            <RangePicker className="w-1/5 h-8" />
+            <Search className="w-1/5 h-8" placeholder="Search" />
+            <Select className="w-1/6 h-8" placeholder="Account" />
+            <Select className="w-1/6 h-8" placeholder="Category" />
+            <AmountSlider />
           </Flex>
         </Col>
       </Row>
@@ -77,14 +110,14 @@ const InputModal = (props) => {
         <Form.Item label="Description" name="Description" required={true}>
           <Input />
         </Form.Item>
-        <Form.Item label="Amount" name="Amount" required={true}>
-          <Input />
-        </Form.Item>
         <Form.Item label="Debit" name="Debit" required={true}>
           <Select />
         </Form.Item>
         <Form.Item label="Credit" name="Credit" required={true}>
           <Select />
+        </Form.Item>
+        <Form.Item label="Amount" name="Amount" required={true}>
+          <Input />
         </Form.Item>
       </Form>
       <Divider />
@@ -137,13 +170,6 @@ const mainColumns = [
     align: "center",
   },
   {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-    width: "10%",
-    align: "center",
-  },
-  {
     title: "Debit",
     dataIndex: "debit",
     key: "debit",
@@ -155,6 +181,13 @@ const mainColumns = [
     dataIndex: "credit",
     key: "credit",
     width: "20%",
+    align: "center",
+  },
+  {
+    title: "Amount",
+    dataIndex: "amount",
+    key: "amount",
+    width: "10%",
     align: "center",
   },
 ];

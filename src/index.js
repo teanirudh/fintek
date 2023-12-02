@@ -27,7 +27,10 @@ const App = () => {
           },
           Table: {
             headerBorderRadius: 24,
-            stickyScrollBarBorderRadius: 50,
+          },
+          Slider: {
+            controlSize: 8,
+            dotSize: 4,
           },
         },
       }}
