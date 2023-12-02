@@ -217,13 +217,13 @@ const Transactions = () => {
       </Header>
       <Content className="!z-0">
         <Table
-          className="h-[84vh] px-[2vh] pt-[2vh]"
+          className="h-[84vh] p-[2vh]"
           columns={columns}
           dataSource={data}
           loading={loading}
           pagination={false}
           sticky={true}
-          scroll={{ y: "calc(72vh)" }}
+          scroll={{ y: "calc(80vh - 55px)" }}
         />
         {showAddModal && (
           <InputModal

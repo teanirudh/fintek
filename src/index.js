@@ -26,6 +26,7 @@ const App = () => {
             activeBarBorderWidth: 0,
           },
           Table: {
+            headerBorderRadius: 24,
             stickyScrollBarBorderRadius: 50,
           },
         },

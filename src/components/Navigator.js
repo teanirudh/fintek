@@ -13,6 +13,7 @@ import Settings from "./Settings";
 import Transactions from "./Transactions";
 
 const { Sider } = Layout;
+const Logo = require("../assets/Logo.png");
 
 const siderItems = [
   {
@@ -61,7 +62,11 @@ const Navigator = () => {
   return (
     <Layout hasSider={true}>
       <Sider className="overflow-auto h-screen top-0 left-0 !sticky">
+        <div className="h-[16vh] flex justify-center items-center">
+          <img src={Logo} alt="Logo" className="w-[8vh] h-[8vh]" />
+        </div>
         <Menu
+          className="py-[2vh]"
           mode="inline"
           items={siderItems}
           onClick={(e) => setPage(e.key)}
