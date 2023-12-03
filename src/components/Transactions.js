@@ -1,4 +1,9 @@
-import { DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -20,6 +25,8 @@ import {
 } from "antd";
 import { useLayoutEffect, useState } from "react";
 
+import { isNil } from "lodash";
+
 const { Content, Header } = Layout;
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -29,7 +36,7 @@ const AmountSlider = () => {
   return (
     <div className="grow px-3 bg-white border border-solid border-[#d9d9d9] rounded-md">
       <Flex className="h-[30px] justify-center items-center" gap="middle">
-        <Tooltip title="Show large transactions" placement="top">
+        <Tooltip title="Show all transactions" placement="top">
           <Switch size="small" />
         </Tooltip>
         <Divider type="vertical" className="h-5 m-0 p-0" />
@@ -46,13 +53,15 @@ const AmountSlider = () => {
           max={100000}
           step={1000}
         />
+        <Divider type="vertical" className="h-5 m-0 p-0" />
         <Text className="text-[#000000] opacity-30">Amount</Text>
       </Flex>
     </div>
   );
 };
 
-const TransHeader = () => {
+const TransHeader = (props) => {
+  const { onModalOpen } = props;
   return (
     <div className="w-full px-[2vh]">
       <Row className="h-1/2" align="middle">
@@ -63,7 +72,7 @@ const TransHeader = () => {
         </Col>
         <Col span={18}>
           <Flex justify="end" gap="middle">
-            <Button>Add Transaction</Button>
+            <Button onClick={onModalOpen}>Add Transaction</Button>
             <Button>Import</Button>
             <Button>Export</Button>
           </Flex>
@@ -84,21 +93,53 @@ const TransHeader = () => {
   );
 };
 
-const InputModal = (props) => {
-  const { isEdit, onOk, onCancel } = props;
+const TransModal = (props) => {
+  const { selectedRecord, onClose, onCreate, onUpdate, onDelete } = props;
+  const reference = selectedRecord?.reference;
+  const isNew = isNil(reference);
+
+  const footer = isNew ? (
+    <Button onClick={onCreate} icon={<SaveOutlined />}>
+      Create
+    </Button>
+  ) : (
+    [
+      <Popconfirm
+        okType="default"
+        okText="Yes"
+        okButtonProps={{ className: "p-1 text-xs" }}
+        cancelText="No"
+        cancelButtonProps={{ className: "p-1 text-xs" }}
+        title={"Delete transaction - " + reference}
+        placement="top"
+        onConfirm={onDelete}
+      >
+        <Button icon={<DeleteOutlined />} danger>
+          Delete
+        </Button>
+      </Popconfirm>,
+      <Popconfirm
+        okType="default"
+        okText="Yes"
+        okButtonProps={{ className: "p-1 text-xs" }}
+        cancelText="No"
+        cancelButtonProps={{ className: "p-1 text-xs" }}
+        title={"Update transaction - " + reference}
+        placement="top"
+        onConfirm={onUpdate}
+      >
+        <Button icon={<EditOutlined />}>Update</Button>
+      </Popconfirm>,
+    ]
+  );
+
   return (
     <Modal
       open={true}
-      title={isEdit ? "Edit Transaction" : "Add Transaction"}
-      okType="default"
-      okText="Save"
-      okButtonProps={{ className: "p-1 text-xs" }}
-      cancelText="Discard"
-      cancelButtonProps={{ className: "p-1 text-xs" }}
-      onOk={onOk}
-      onCancel={onCancel}
+      title={isNew ? "New transaction" : "Transaction - " + reference}
+      footer={footer}
+      onCancel={onClose}
       maskClosable={false}
-      closeIcon={null}
       destroyOnClose={true}
       centered
     >
@@ -125,85 +166,67 @@ const InputModal = (props) => {
   );
 };
 
-const EditButton = (props) => {
-  const { onClick } = props;
-  return <EditTwoTone onClick={onClick} />;
-};
-
-const DeleteButton = () => {
-  return (
-    <Popconfirm
-      okType="default"
-      okText="Yes"
-      okButtonProps={{ className: "p-1 text-xs" }}
-      cancelText="No"
-      cancelButtonProps={{ className: "p-1 text-xs" }}
-      title="Delete this transaction?"
-      placement="left"
-      onConfirm={() => {}}
-    >
-      <DeleteTwoTone />
-    </Popconfirm>
-  );
-};
-
 const mainColumns = [
   {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-    width: "5%",
+    title: "Reference",
+    dataIndex: "reference",
+    key: "reference",
+    width: "12%",
     align: "center",
   },
   {
     title: "Date",
     dataIndex: "date",
     key: "date",
-    width: "10%",
+    width: "12%",
     align: "center",
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
-    width: "28%",
+    width: "24%",
     align: "center",
   },
   {
     title: "Debit",
     dataIndex: "debit",
     key: "debit",
-    width: "20%",
+    width: "16%",
     align: "center",
   },
   {
     title: "Credit",
     dataIndex: "credit",
     key: "credit",
-    width: "20%",
+    width: "16%",
     align: "center",
   },
   {
     title: "Amount",
     dataIndex: "amount",
     key: "amount",
-    width: "10%",
+    width: "16%",
     align: "center",
   },
 ];
 
 const data = [];
-
+const date = new Date();
 for (let i = 1; i <= 25; i++) {
   data.push({
     key: i,
-    id: i,
+    reference:
+      String(date.getFullYear()) +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      String(date.getDate()).padStart(2, "0") +
+      String(i).padStart(4, "0"),
     date:
-      new Date().getDate() +
+      String(date.getDate()).padStart(2, "0") +
       "-" +
-      (new Date().getMonth() + 1) +
+      String(date.getMonth() + 1).padStart(2, "0") +
       "-" +
-      new Date().getFullYear(),
+      date.getFullYear(),
     description: "Description " + i,
     amount: i * 100,
     debit: "Debit " + i,
@@ -213,8 +236,8 @@ for (let i = 1; i <= 25; i++) {
 
 const Transactions = () => {
   const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   useLayoutEffect(() => {
     setLoading(false);
@@ -224,29 +247,53 @@ const Transactions = () => {
     ...mainColumns,
     {
       title: "",
-      dataIndex: "actions",
-      key: "actions",
-      width: "7%",
+      dataIndex: "action",
+      key: "action",
+      width: "4%",
       align: "center",
-      render: () => {
+      render: (_, record) => {
         return (
-          <Row>
-            <Col span={12}>
-              <EditButton onClick={() => setShowEditModal(true)} />
-            </Col>
-            <Col span={12}>
-              <DeleteButton />
-            </Col>
-          </Row>
+          <Button
+            type="text"
+            icon={<EllipsisOutlined />}
+            size="small"
+            onClick={() => onRecordSelect(record)}
+          />
         );
       },
     },
   ];
 
+  const onRecordSelect = (record) => {
+    setSelectedRecord(record);
+    setShowModal(true);
+  };
+
+  const onModalOpen = () => {
+    setShowModal(true);
+  };
+
+  const onModalClose = () => {
+    setShowModal(false);
+    setSelectedRecord(null);
+  };
+
+  const onRecordCreate = () => {
+    setShowModal(false);
+  };
+
+  const onRecordUpdate = () => {
+    setShowModal(false);
+  };
+
+  const onRecordDelete = () => {
+    setShowModal(false);
+  };
+
   return (
     <Layout>
       <Header className="!sticky top-0 z-10 flex min-h-min h-[16vh] p-0">
-        <TransHeader />
+        <TransHeader onModalOpen={onModalOpen} />
       </Header>
       <Content className="!z-0">
         <Table
@@ -258,26 +305,13 @@ const Transactions = () => {
           sticky={true}
           scroll={{ y: "calc(80vh - 55px)" }}
         />
-        {showAddModal && (
-          <InputModal
-            isEdit={false}
-            onOk={() => {
-              setShowAddModal(false);
-            }}
-            onCancel={() => {
-              setShowAddModal(false);
-            }}
-          />
-        )}
-        {showEditModal && (
-          <InputModal
-            isEdit={true}
-            onOk={() => {
-              setShowEditModal(false);
-            }}
-            onCancel={() => {
-              setShowEditModal(false);
-            }}
+        {showModal && (
+          <TransModal
+            selectedRecord={selectedRecord}
+            onClose={onModalClose}
+            onCreate={onRecordCreate}
+            onUpdate={onRecordUpdate}
+            onDelete={onRecordDelete}
           />
         )}
       </Content>
