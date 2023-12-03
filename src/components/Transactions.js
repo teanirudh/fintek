@@ -1,8 +1,11 @@
 import {
   DeleteOutlined,
+  DollarCircleOutlined,
+  DownloadOutlined,
   EditOutlined,
   EllipsisOutlined,
-  SaveOutlined,
+  ExportOutlined,
+  TransactionOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -12,6 +15,7 @@ import {
   Flex,
   Form,
   Input,
+  InputNumber,
   Layout,
   Modal,
   Popconfirm,
@@ -31,13 +35,14 @@ const { Content, Header } = Layout;
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 const { Search } = Input;
+const { Item } = Form;
 
 const AmountSlider = () => {
   return (
     <div className="grow px-3 bg-white border border-solid border-[#d9d9d9] rounded-md">
       <Flex className="h-[30px] justify-center items-center" gap="middle">
         <Tooltip title="Show all transactions" placement="top">
-          <Switch size="small" />
+          <Switch className="bg-[#d9d9d9]" size="small" />
         </Tooltip>
         <Divider type="vertical" className="h-5 m-0 p-0" />
         <Slider
@@ -72,9 +77,11 @@ const TransHeader = (props) => {
         </Col>
         <Col span={18}>
           <Flex justify="end" gap="middle">
-            <Button onClick={onModalOpen}>Add Transaction</Button>
-            <Button>Import</Button>
-            <Button>Export</Button>
+            <Button icon={<TransactionOutlined />} onClick={onModalOpen}>
+              Add transaction
+            </Button>
+            <Button icon={<DownloadOutlined />}>Import</Button>
+            <Button icon={<ExportOutlined />}>Export</Button>
           </Flex>
         </Col>
       </Row>
@@ -93,44 +100,70 @@ const TransHeader = (props) => {
   );
 };
 
+const NewTransModalFooter = (props) => {
+  const { onCreate } = props;
+  return [
+    <Popconfirm
+      key="create"
+      okType="default"
+      okText="Yes"
+      okButtonProps={{ className: "p-1 text-xs" }}
+      cancelText="No"
+      cancelButtonProps={{ className: "p-1 text-xs" }}
+      title={"Create new transaction"}
+      placement="top"
+      onConfirm={onCreate}
+    >
+      <Button icon={<DollarCircleOutlined />}>Create</Button>
+    </Popconfirm>,
+  ];
+};
+
+const OldTransModalFooter = (props) => {
+  const { onUpdate, onDelete, reference } = props;
+  return [
+    <Popconfirm
+      key="delete"
+      okType="default"
+      okText="Yes"
+      okButtonProps={{ className: "p-1 text-xs" }}
+      cancelText="No"
+      cancelButtonProps={{ className: "p-1 text-xs" }}
+      title={"Delete transaction - " + reference}
+      placement="top"
+      onConfirm={onDelete}
+    >
+      <Button icon={<DeleteOutlined />}>Delete</Button>
+    </Popconfirm>,
+    <Popconfirm
+      key="update"
+      okType="default"
+      okText="Yes"
+      okButtonProps={{ className: "p-1 text-xs" }}
+      cancelText="No"
+      cancelButtonProps={{ className: "p-1 text-xs" }}
+      title={"Update transaction - " + reference}
+      placement="top"
+      onConfirm={onUpdate}
+    >
+      <Button icon={<EditOutlined />}>Update</Button>
+    </Popconfirm>,
+  ];
+};
+
 const TransModal = (props) => {
   const { selectedRecord, onClose, onCreate, onUpdate, onDelete } = props;
   const reference = selectedRecord?.reference;
   const isNew = isNil(reference);
 
   const footer = isNew ? (
-    <Button onClick={onCreate} icon={<SaveOutlined />}>
-      Create
-    </Button>
+    <NewTransModalFooter onCreate={onCreate} />
   ) : (
-    [
-      <Popconfirm
-        okType="default"
-        okText="Yes"
-        okButtonProps={{ className: "p-1 text-xs" }}
-        cancelText="No"
-        cancelButtonProps={{ className: "p-1 text-xs" }}
-        title={"Delete transaction - " + reference}
-        placement="top"
-        onConfirm={onDelete}
-      >
-        <Button icon={<DeleteOutlined />} danger>
-          Delete
-        </Button>
-      </Popconfirm>,
-      <Popconfirm
-        okType="default"
-        okText="Yes"
-        okButtonProps={{ className: "p-1 text-xs" }}
-        cancelText="No"
-        cancelButtonProps={{ className: "p-1 text-xs" }}
-        title={"Update transaction - " + reference}
-        placement="top"
-        onConfirm={onUpdate}
-      >
-        <Button icon={<EditOutlined />}>Update</Button>
-      </Popconfirm>,
-    ]
+    <OldTransModalFooter
+      onUpdate={onUpdate}
+      onDelete={onDelete}
+      reference={reference}
+    />
   );
 
   return (
@@ -141,25 +174,46 @@ const TransModal = (props) => {
       onCancel={onClose}
       maskClosable={false}
       destroyOnClose={true}
-      centered
+      centered={true}
     >
       <Divider />
       <Form layout="vertical">
-        <Form.Item label="Date" name="Date" required={true}>
-          <DatePicker />
-        </Form.Item>
-        <Form.Item label="Description" name="Description" required={true}>
-          <Input />
-        </Form.Item>
-        <Form.Item label="Debit" name="Debit" required={true}>
-          <Select />
-        </Form.Item>
-        <Form.Item label="Credit" name="Credit" required={true}>
-          <Select />
-        </Form.Item>
-        <Form.Item label="Amount" name="Amount" required={true}>
-          <Input />
-        </Form.Item>
+        <Row className="py-3">
+          <Col span={12} className="px-3">
+            <Item label="Date" name="date" required={true}>
+              <DatePicker className="w-full" />
+            </Item>
+          </Col>
+          <Col span={12} className="px-3">
+            <Item label="Amount" name="amount" required={true}>
+              <InputNumber
+                className="w-full"
+                placeholder="Enter amount"
+                controls={false}
+                decimalSeparator="."
+              />
+            </Item>
+          </Col>
+        </Row>
+        <Row className="py-3">
+          <Col span={12} className="px-3">
+            <Item label="Debit" name="debit" required={true}>
+              <Select placeholder="Debit from" />
+            </Item>
+          </Col>
+          <Col span={12} className="px-3">
+            <Item label="Credit" name="credit" required={true}>
+              <Select placeholder="Credit to" />
+            </Item>
+          </Col>
+        </Row>
+        <Row className="py-3">
+          <Col span={24} className="px-3">
+            <Item label="Description" name="description" required={true}>
+              <Input placeholder="Enter short description" />
+            </Item>
+          </Col>
+        </Row>
       </Form>
       <Divider />
     </Modal>

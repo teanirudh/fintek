@@ -32,6 +32,9 @@ const App = () => {
             controlSize: 8,
             dotSize: 4,
           },
+          Form: {
+            itemMarginBottom: 0,
+          },
         },
       }}
     >
