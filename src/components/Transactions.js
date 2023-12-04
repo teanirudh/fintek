@@ -12,6 +12,7 @@ import {
   Col,
   DatePicker,
   Divider,
+  Drawer,
   Flex,
   Form,
   Input,
@@ -66,7 +67,7 @@ const AmountSlider = () => {
 };
 
 const TransHeader = (props) => {
-  const { onModalOpen } = props;
+  const { onDrawerOpen, onModalOpen } = props;
   return (
     <div className="w-full px-[2vh]">
       <Row className="h-1/2" align="middle">
@@ -80,8 +81,12 @@ const TransHeader = (props) => {
             <Button icon={<TransactionOutlined />} onClick={onModalOpen}>
               Add transaction
             </Button>
-            <Button icon={<DownloadOutlined />}>Import</Button>
-            <Button icon={<ExportOutlined />}>Export</Button>
+            <Button icon={<DownloadOutlined />} onClick={onDrawerOpen}>
+              Import
+            </Button>
+            <Button icon={<ExportOutlined />} onClick={onDrawerOpen}>
+              Export
+            </Button>
           </Flex>
         </Col>
       </Row>
@@ -97,6 +102,19 @@ const TransHeader = (props) => {
         </Col>
       </Row>
     </div>
+  );
+};
+
+const TransDrawer = (props) => {
+  const { onClose, mode } = props;
+  return (
+    <Drawer
+      open={true}
+      title={mode === "import" ? "Import transactions" : "Export transactions"}
+      onClose={onClose}
+      maskClosable={false}
+      destroyOnClose={true}
+    />
   );
 };
 
@@ -291,6 +309,7 @@ for (let i = 1; i <= 25; i++) {
 const Transactions = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   useLayoutEffect(() => {
@@ -317,6 +336,14 @@ const Transactions = () => {
       },
     },
   ];
+
+  const onDrawerOpen = () => {
+    setShowDrawer(true);
+  };
+
+  const onDrawerClose = () => {
+    setShowDrawer(false);
+  };
 
   const onRecordSelect = (record) => {
     setSelectedRecord(record);
@@ -347,7 +374,7 @@ const Transactions = () => {
   return (
     <Layout>
       <Header className="!sticky top-0 z-10 flex min-h-min h-[16vh] p-0">
-        <TransHeader onModalOpen={onModalOpen} />
+        <TransHeader onModalOpen={onModalOpen} onDrawerOpen={onDrawerOpen} />
       </Header>
       <Content className="!z-0">
         <Table
@@ -368,6 +395,7 @@ const Transactions = () => {
             onDelete={onRecordDelete}
           />
         )}
+        {showDrawer && <TransDrawer onClose={onDrawerClose} />}
       </Content>
     </Layout>
   );
