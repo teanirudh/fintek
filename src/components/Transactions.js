@@ -5,6 +5,7 @@ import {
   EditOutlined,
   EllipsisOutlined,
   ExportOutlined,
+  InboxOutlined,
   TransactionOutlined,
 } from "@ant-design/icons";
 import {
@@ -23,10 +24,12 @@ import {
   Row,
   Select,
   Slider,
+  Space,
   Switch,
   Table,
   Tooltip,
   Typography,
+  Upload,
 } from "antd";
 import { useLayoutEffect, useState } from "react";
 
@@ -37,6 +40,7 @@ const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 const { Search } = Input;
 const { Item } = Form;
+const { Dragger } = Upload;
 
 const AmountSlider = () => {
   return (
@@ -67,7 +71,7 @@ const AmountSlider = () => {
 };
 
 const TransHeader = (props) => {
-  const { onDrawerOpen, onModalOpen } = props;
+  const { onDrawerOpen, onModalOpen, setTransferMode } = props;
   return (
     <div className="w-full px-[2vh]">
       <Row className="h-1/2" align="middle">
@@ -81,10 +85,22 @@ const TransHeader = (props) => {
             <Button icon={<TransactionOutlined />} onClick={onModalOpen}>
               Add transaction
             </Button>
-            <Button icon={<DownloadOutlined />} onClick={onDrawerOpen}>
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={() => {
+                setTransferMode("import");
+                onDrawerOpen();
+              }}
+            >
               Import
             </Button>
-            <Button icon={<ExportOutlined />} onClick={onDrawerOpen}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={() => {
+                setTransferMode("export");
+                onDrawerOpen();
+              }}
+            >
               Export
             </Button>
           </Flex>
@@ -105,16 +121,86 @@ const TransHeader = (props) => {
   );
 };
 
+const ImportDrawer = (props) => {
+  return (
+    <>
+      <Row className="pb-4">
+        <Text className="font-bold">Step-1: Upload source file</Text>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <Dragger maxCount={1}>
+            <Space direction="vertical" align="center">
+              <InboxOutlined className="text-4xl" />
+              <Text>Click or drag file to this area to upload</Text>
+            </Space>
+          </Dragger>
+        </Col>
+      </Row>
+      <Row className="!h-8">
+        <Col span={24} align="middle">
+          {true && (
+            <Text className="text-[#000000] opacity-30">
+              Supported file types: .csv, .xls, .xlsx
+            </Text>
+          )}
+        </Col>
+      </Row>
+      <Divider />
+      <Row className="pb-6">
+        <Text className="font-bold">Step-2: Map the fields</Text>
+      </Row>
+      <Row className="pb-4">
+        <Col span={12}>
+          <Select className="px-2 w-full" placeholder="Date" />
+        </Col>
+        <Col span={12}>
+          <Select className="px-2 w-full" placeholder="Amount" />
+        </Col>
+      </Row>
+      <Row className="pb-4">
+        <Col span={12}>
+          <Select className="px-2 w-full" placeholder="Debit" />
+        </Col>
+        <Col span={12}>
+          <Select className="px-2 w-full" placeholder="Credit" />
+        </Col>
+      </Row>
+      <Row className="pb-4">
+        <Col span={12}>
+          <Select className="px-2 w-full" placeholder="Description" />
+        </Col>
+      </Row>
+      <Divider />
+      <Row className="pb-4">
+        <Text className="font-bold">Step-3: Start import process</Text>
+      </Row>
+      <Row>
+        <Col span={24} align="middle">
+          <Button>Import</Button>
+        </Col>
+      </Row>
+      <Divider />
+    </>
+  );
+};
+
 const TransDrawer = (props) => {
-  const { onClose, mode } = props;
+  const { onClose, transferMode } = props;
+
+  const drawerContent = transferMode === "import" ? <ImportDrawer /> : <></>;
   return (
     <Drawer
       open={true}
-      title={mode === "import" ? "Import transactions" : "Export transactions"}
+      title={
+        (transferMode === "import" ? "Import" : "Export") + " transactions"
+      }
       onClose={onClose}
       maskClosable={false}
       destroyOnClose={true}
-    />
+    >
+      {drawerContent}
+    </Drawer>
   );
 };
 
@@ -311,6 +397,7 @@ const Transactions = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [transferMode, setTransferMode] = useState(null);
 
   useLayoutEffect(() => {
     setLoading(false);
@@ -374,7 +461,12 @@ const Transactions = () => {
   return (
     <Layout>
       <Header className="!sticky top-0 z-10 flex min-h-min h-[16vh] p-0">
-        <TransHeader onModalOpen={onModalOpen} onDrawerOpen={onDrawerOpen} />
+        <TransHeader
+          onModalOpen={onModalOpen}
+          onDrawerOpen={onDrawerOpen}
+          transferMode={transferMode}
+          setTransferMode={setTransferMode}
+        />
       </Header>
       <Content className="!z-0">
         <Table
@@ -395,7 +487,9 @@ const Transactions = () => {
             onDelete={onRecordDelete}
           />
         )}
-        {showDrawer && <TransDrawer onClose={onDrawerClose} />}
+        {showDrawer && (
+          <TransDrawer onClose={onDrawerClose} transferMode={transferMode} />
+        )}
       </Content>
     </Layout>
   );
