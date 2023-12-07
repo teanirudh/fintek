@@ -1,62 +1,36 @@
 {
-  "name": "tryx",
-  "version": "0.1.0",
+  "name": "fintek",
+  "version": "1.0.0",
+  "description": "your financial assistant",
+  "author": "@teanirudh",
   "private": true,
-  "main": "engine/main.js",
+  "main": "./out/main/index.js",
   "homepage": "./",
-  "dependencies": {
-    "electron-is-dev": "^2.0.0",
-    "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.1",
-    "sqlite3": "^5.1.6",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
-    "start-react": "react-scripts start",
-    "start-electron": "nodemon --watch ./engine/* --exec \"electron .\"",
-    "dev": "concurrently \"yarn start-react\" \"wait-on http://localhost:3000 && yarn start-electron\"",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
     "postinstall": "electron-builder install-app-deps",
-    "pack-app": "react-scripts build && electron-builder --dir",
-    "build": "react-scripts build && electron-builder"
+    "build:win": "npm run build && electron-builder --win --config",
+    "build:mac": "npm run build && electron-builder --mac --config",
+    "build:linux": "npm run build && electron-builder --linux --config"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@electron-toolkit/preload": "^2.0.0",
+    "@electron-toolkit/utils": "^2.0.0"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@vitejs/plugin-react": "^4.0.4",
     "antd": "^5.11.0",
-    "concurrently": "^8.2.2",
-    "electron": "^27.0.3",
-    "electron-builder": "^24.6.4",
-    "nodemon": "^3.0.1",
+    "electron": "^25.6.0",
+    "electron-builder": "^24.6.3",
+    "electron-vite": "^1.0.27",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tailwindcss": "^3.3.5",
-    "wait-on": "^7.1.0"
-  },
-  "build": {
-    "extends": null,
-    "appId": "com.teanirudh.tryx",
-    "productName": "tryx",
-    "copyright": "@teanirudh",
-    "files": [
-      "build/**/*"
-    ]
+    "vite": "^4.4.9"
   }
 }

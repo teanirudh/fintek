@@ -7,6 +7,7 @@ import {
 import { Layout, Menu, Typography } from "antd";
 
 import { useState } from "react";
+import Logo from "../assets/budget.png";
 import Accounts from "./Accounts";
 import Dashboard from "./Dashboard";
 import Settings from "./Settings";
@@ -14,7 +15,6 @@ import Transactions from "./Transactions";
 
 const { Sider } = Layout;
 const { Title } = Typography;
-const Logo = require("../assets/budget.png");
 
 const siderItems = [
   {

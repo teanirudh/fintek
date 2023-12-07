@@ -1,17 +1,5 @@
-# dependencies
-/node_modules
-
-# production
-/build
-
-# user files
-/userdata
-
-# misc
-.env.*
-
-# logs
+node_modules
+dist
+out
 *.log*
-
-# config files
-.vscode
+.env
