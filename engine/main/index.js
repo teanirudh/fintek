@@ -9,6 +9,7 @@ function createWindow() {
     height: 1000,
     show: false,
     autoHideMenuBar: true,
+    icon: join(__dirname, "../../src/assets/rupee.png"),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
