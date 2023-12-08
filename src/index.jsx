@@ -1,4 +1,4 @@
-import "./styles/index.css";
+import "./assets/index.css";
 
 import { ConfigProvider, theme } from "antd";
 

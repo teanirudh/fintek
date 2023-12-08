@@ -1,6 +1,6 @@
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "electron-vite";
 import { resolve } from "path";
-import { transformWithEsbuild } from "vite";
 
 export default defineConfig({
   main: {
@@ -30,25 +30,6 @@ export default defineConfig({
         },
       },
     },
-    plugins: [
-      {
-        name: "treat-js-files-as-jsx",
-        async transform(code, id) {
-          if (!id.match(/src\/.*\.js$/)) return null;
-          return transformWithEsbuild(code, id, {
-            loader: "jsx",
-            jsx: "automatic",
-          });
-        },
-      },
-    ],
-    optimizeDeps: {
-      force: true,
-      esbuildOptions: {
-        loader: {
-          ".js": "jsx",
-        },
-      },
-    },
+    plugins: [react()],
   },
 });
