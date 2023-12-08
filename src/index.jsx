@@ -26,7 +26,7 @@ const App = () => {
             activeBarBorderWidth: 0,
           },
           Table: {
-            headerBorderRadius: 24,
+            headerBorderRadius: 0,
           },
           Slider: {
             controlSize: 8,

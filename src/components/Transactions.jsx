@@ -392,6 +392,22 @@ for (let i = 1; i <= 25; i++) {
   });
 }
 
+const TransTable = (props) => {
+  const { columns, loading } = props;
+  return (
+    <div className="h-[80vh] m-[2vh] trans-table overflow-y-scroll">
+      <Table
+        className="!w-full"
+        columns={columns}
+        dataSource={data}
+        loading={loading}
+        pagination={false}
+        sticky={true}
+      />
+    </div>
+  );
+};
+
 const Transactions = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -469,15 +485,7 @@ const Transactions = () => {
         />
       </Header>
       <Content className="!z-0">
-        <Table
-          className="h-[84vh] p-[2vh]"
-          columns={columns}
-          dataSource={data}
-          loading={loading}
-          pagination={false}
-          sticky={true}
-          scroll={{ y: "calc(80vh - 55px)" }}
-        />
+        <TransTable columns={columns} loading={loading} />
         {showModal && (
           <TransModal
             selectedRecord={selectedRecord}
