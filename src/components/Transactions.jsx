@@ -31,7 +31,7 @@ import {
   Typography,
   Upload,
 } from "antd";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { isNil } from "lodash";
 
@@ -369,37 +369,14 @@ const mainColumns = [
   },
 ];
 
-const data = [];
-const date = new Date();
-for (let i = 1; i <= 25; i++) {
-  data.push({
-    key: i,
-    reference:
-      String(date.getFullYear()) +
-      String(date.getMonth() + 1).padStart(2, "0") +
-      String(date.getDate()).padStart(2, "0") +
-      String(i).padStart(4, "0"),
-    date:
-      String(date.getDate()).padStart(2, "0") +
-      "-" +
-      String(date.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      date.getFullYear(),
-    description: "Description " + i,
-    amount: i * 100,
-    debit: "Debit " + i,
-    credit: "Credit " + i,
-  });
-}
-
 const TransTable = (props) => {
-  const { columns, loading } = props;
+  const { columns, transactions, loading } = props;
   return (
     <div className="h-[80vh] m-[2vh] trans-table overflow-y-scroll">
       <Table
         className="!w-full"
         columns={columns}
-        dataSource={data}
+        dataSource={transactions}
         loading={loading}
         pagination={false}
         sticky={true}
@@ -409,14 +386,23 @@ const TransTable = (props) => {
 };
 
 const Transactions = () => {
+  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [transferMode, setTransferMode] = useState(null);
 
-  useLayoutEffect(() => {
-    setLoading(false);
+  useEffect(() => {
+    window.api
+      .getTransactions()
+      .then((res) => {
+        setTransactions(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const columns = [
@@ -485,7 +471,11 @@ const Transactions = () => {
         />
       </Header>
       <Content className="!z-0">
-        <TransTable columns={columns} loading={loading} />
+        <TransTable
+          columns={columns}
+          transactions={transactions}
+          loading={loading}
+        />
         {showModal && (
           <TransModal
             selectedRecord={selectedRecord}

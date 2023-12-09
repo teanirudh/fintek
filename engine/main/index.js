@@ -1,7 +1,8 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { BrowserWindow, app, shell } from "electron";
+import { BrowserWindow, app, ipcMain, shell } from "electron";
 
 import { join } from "path";
+import { getTransactions } from "./transactions";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -39,6 +40,8 @@ app.whenReady().then(() => {
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
+
+  ipcMain.handle("getTransactions", getTransactions);
 
   createWindow();
 
