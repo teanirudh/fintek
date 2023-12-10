@@ -5,7 +5,9 @@
 
 @font-face {
   font-family: "Gilroy";
-  src: local("Gilroy-Regular"), url(../assets/Gilroy.ttf) format("truetype");
+  src:
+    local("Gilroy-Regular"),
+    url(../assets/Gilroy.ttf) format("truetype");
 }
 
 .trans-table {
@@ -22,5 +24,18 @@
 }
 
 .trans-table::-webkit-scrollbar-track {
+  display: none;
+}
+
+.ant-table-container {
+  border-top: none !important;
+}
+
+.ant-table-thead > tr > th {
+  text-align: center !important;
+  border-top: 1px solid #f0f0f0 !important;
+}
+
+.ant-table-thead > tr > th::before {
   display: none;
 }

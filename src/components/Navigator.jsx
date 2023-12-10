@@ -66,7 +66,7 @@ const Navigator = () => {
         <div className="h-[16vh] flex flex-col justify-center items-center">
           <img src={Logo} alt="Logo" className="w-[8vh] h-[8vh]" />
           <Title level={5} className="!m-0 !p-0">
-            FinTek
+            fintek
           </Title>
         </div>
         <Menu

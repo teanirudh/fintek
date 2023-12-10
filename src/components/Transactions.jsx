@@ -1,11 +1,12 @@
 import {
   DeleteOutlined,
-  DollarCircleOutlined,
   DownloadOutlined,
   EditOutlined,
   EllipsisOutlined,
   ExportOutlined,
+  FormOutlined,
   InboxOutlined,
+  SaveOutlined,
   TransactionOutlined,
 } from "@ant-design/icons";
 import {
@@ -42,6 +43,60 @@ const { Search } = Input;
 const { Item } = Form;
 const { Dragger } = Upload;
 
+const transTableColumns = [
+  {
+    title: "Reference",
+    dataIndex: "reference",
+    width: "12%",
+    key: "reference",
+    align: "center",
+  },
+  {
+    title: "Date",
+    dataIndex: "date",
+    width: "12%",
+    key: "date",
+    align: "center",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    width: "30%",
+    key: "description",
+    align: "center",
+    className: "!text-left",
+  },
+  {
+    title: "Debit",
+    dataIndex: "debit",
+    width: "15%",
+    key: "debit",
+    align: "center",
+  },
+  {
+    title: "Credit",
+    dataIndex: "credit",
+    width: "15%",
+    key: "credit",
+    align: "center",
+  },
+  {
+    title: "Amount",
+    dataIndex: "amount",
+    width: "12%",
+    key: "amount",
+    align: "center",
+    className: "!text-right",
+  },
+  {
+    title: <FormOutlined />,
+    dataIndex: "action",
+    width: "4%",
+    key: "action",
+    align: "center",
+  },
+];
+
 const AmountSlider = () => {
   return (
     <div className="grow px-3 bg-white border border-solid border-[#d9d9d9] rounded-md">
@@ -60,7 +115,7 @@ const AmountSlider = () => {
             ),
           }}
           min={0}
-          max={100000}
+          max={10000}
           step={1000}
         />
         <Divider type="vertical" className="h-5 m-0 p-0" />
@@ -218,7 +273,7 @@ const NewTransModalFooter = (props) => {
       placement="top"
       onConfirm={onCreate}
     >
-      <Button icon={<DollarCircleOutlined />}>Create</Button>
+      <Button icon={<SaveOutlined />}>Create</Button>
     </Popconfirm>,
   ];
 };
@@ -324,51 +379,6 @@ const TransModal = (props) => {
   );
 };
 
-const mainColumns = [
-  {
-    title: "Reference",
-    dataIndex: "reference",
-    key: "reference",
-    width: "12%",
-    align: "center",
-  },
-  {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
-    width: "12%",
-    align: "center",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-    width: "24%",
-    align: "center",
-  },
-  {
-    title: "Debit",
-    dataIndex: "debit",
-    key: "debit",
-    width: "16%",
-    align: "center",
-  },
-  {
-    title: "Credit",
-    dataIndex: "credit",
-    key: "credit",
-    width: "16%",
-    align: "center",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-    width: "16%",
-    align: "center",
-  },
-];
-
 const TransTable = (props) => {
   const { columns, transactions, loading } = props;
   return (
@@ -380,6 +390,7 @@ const TransTable = (props) => {
         loading={loading}
         pagination={false}
         sticky={true}
+        bordered={true}
       />
     </div>
   );
@@ -406,19 +417,13 @@ const Transactions = () => {
   }, []);
 
   const columns = [
-    ...mainColumns,
+    ...transTableColumns.slice(0, 6),
     {
-      title: "",
-      dataIndex: "action",
-      key: "action",
-      width: "4%",
-      align: "center",
+      ...transTableColumns[6],
       render: (_, record) => {
         return (
-          <Button
-            type="text"
-            icon={<EllipsisOutlined />}
-            size="small"
+          <EllipsisOutlined
+            className="opacity-40  hover:opacity-100"
             onClick={() => onRecordSelect(record)}
           />
         );
