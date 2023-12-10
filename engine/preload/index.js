@@ -1,15 +1,12 @@
-import { contextBridge, ipcRenderer } from "electron";
-
-const api = {
-  getTransactions: () => ipcRenderer.invoke("getTransactions"),
-};
+import { contextBridge } from "electron";
+import { invokeApi } from "./api";
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld("api", api);
+    contextBridge.exposeInMainWorld("api", { ...invokeApi });
   } catch (error) {
     console.error(error);
   }
 } else {
-  window.api = api;
+  window.api = { ...invokeApi };
 }

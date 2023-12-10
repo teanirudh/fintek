@@ -2,7 +2,7 @@ import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { BrowserWindow, app, ipcMain, shell } from "electron";
 
 import { join } from "path";
-import { getTransactions } from "./transactions";
+import { handleApi } from "./api";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -41,7 +41,9 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  ipcMain.handle("getTransactions", getTransactions);
+  Object.entries(handleApi).forEach(([channel, handler]) => {
+    ipcMain.handle(channel, handler);
+  });
 
   createWindow();
 
