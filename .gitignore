@@ -1,5 +1,7 @@
 node_modules
+migrations
 dist
 out
+data
 *.log*
 .env
